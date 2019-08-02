@@ -1,2 +1,2 @@
-web: gunicorn app:server
+web: gunicorn dash_map:server
 worker: python dash_map.py
