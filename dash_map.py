@@ -8,7 +8,7 @@ import pandas as pd
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
-
+server = app.server
 app.title = 'Weather Observation Points UK'
 
 df = pd.read_csv('location_detail_final_v3.csv')
@@ -89,19 +89,13 @@ def buildGraph(lat_df,lon_df,name_df,elevation_df):
 @app.callback(Output(component_id='regions-bar-graph',component_property='figure'),
 [Input('region-check-boxes','value')])
 def makeBarGraph(input_choice):
-    #regional_df = df[df['region'].isin(input_choice)]
     count_stations = df['region'].value_counts()
     df_bind = pd.DataFrame(columns=['region','count'])
     df_bind['region'] = df['region'].unique()
     df_bind['count'] = count_stations.values
 
     y_vals = df_bind[df_bind['region'].isin(input_choice)]['count']
-    print(y_vals)
 
-    #problem occurs because the x axis value is deleted
-    #but the y value persists
-    #additionally, the graph sorts highest to smalelst
-    #but it isn't also moving the labels
     graph_fig = go.Figure(
     data=[go.Bar(x=input_choice, y=y_vals)],
     layout=go.Layout(
